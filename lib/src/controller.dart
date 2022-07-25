@@ -1117,6 +1117,11 @@ class MaplibreMapController extends ChangeNotifier {
     return _mapboxGlPlatform.removeLayer(layerId);
   }
 
+  /// Removes a Mapbox style layer
+  Future<void> setLayerVisibility(List<String> layerIds, bool visibility) {
+    return _mapboxGlPlatform.setLayerVisibility(layerIds, visibility);
+  }
+
   Future<void> setFilter(String layerId, dynamic filter) {
     return _mapboxGlPlatform.setFilter(layerId, filter);
   }
@@ -1153,6 +1158,20 @@ class MaplibreMapController extends ChangeNotifier {
   /// Add a new source to the map
   Future<void> addSource(String sourceid, SourceProperties properties) async {
     return _mapboxGlPlatform.addSource(sourceid, properties);
+  }
+
+  Future setCameraBounds({
+    required double west,
+    required double north,
+    required double south,
+    required double east,
+  }) async {
+    return _mapboxGlPlatform.setCameraBounds(
+      west: west,
+      north: north,
+      south: south,
+      east: east,
+    );
   }
 
   /// Add a layer to the map with the given properties

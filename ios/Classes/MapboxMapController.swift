@@ -38,7 +38,15 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
         registrar: FlutterPluginRegistrar
     ) {
         mapView = MGLMapView(frame: frame)
+        mapView.logoView.isHidden = true
+        mapView.attributionButton.isHidden = true
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+        mapView.setCenter(
+            CLLocationCoordinate2D(latitude: 47.127757, longitude: 8.579139),
+            zoomLevel: 10,
+            animated: false)
+
         mapView.logoView.isHidden = true
         self.registrar = registrar
 
@@ -648,6 +656,47 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
             }
             interactiveFeatureLayerIds.remove(layerId)
             mapView.style?.removeLayer(layer)
+            result(nil)
+
+        case "style#layerVisibility":
+          guard let arguments = methodCall.arguments as? [String: Any] else { return }
+          guard let visibility = arguments["visibility"] as? Bool else { return }
+          guard let affectedLayers = arguments["layerIds"] as? [String] else { return }
+
+          let style = mapView.style
+          for affectedLayer in affectedLayers {
+            if let layer = style?.layer(withIdentifier: affectedLayer) {
+                layer.isVisible = visibility
+            }
+          }
+          result(nil)
+
+        case "map#setGeoJson":
+          guard let arguments = methodCall.arguments as? [String: Any] else { return }
+          guard let sketch = arguments["sketch"] as? String else { return }
+
+          if sketch.isEmpty {
+              NSLog("setGeoJson - string empty")
+              return
+          }
+
+          guard let source = mapView.style?.source(withIdentifier: "composite") as? MGLShapeSource else { return }
+          let data = sketch.data(using: .utf8)
+          let shape = try! MGLShape(data: data!, encoding: String.Encoding.utf8.rawValue) as! MGLShapeCollectionFeature
+          source.shape = shape
+          result(nil)
+
+        case "map#setCameraBounds":
+            guard let arguments = methodCall.arguments as? [String: Any] else { return }
+            guard let west = arguments["west"] as? Double else { return }
+            guard let north = arguments["north"] as? Double else { return }
+            guard let south = arguments["south"] as? Double else { return }
+            guard let east = arguments["east"] as? Double else { return }
+
+            let southwest = CLLocationCoordinate2D(latitude: west, longitude: south)
+            let northeast = CLLocationCoordinate2D(latitude: east, longitude: north)
+            let bounds = MGLCoordinateBounds(sw: southwest, ne: northeast)
+            mapView.setVisibleCoordinateBounds(bounds, animated: false)
             result(nil)
 
         case "style#setFilter":

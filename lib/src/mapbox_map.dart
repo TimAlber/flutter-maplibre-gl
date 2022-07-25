@@ -287,7 +287,9 @@ class _MaplibreMapState extends State<MaplibreMap> {
         if (_controller.isCompleted) {
           widget.onStyleLoadedCallback!();
         } else {
-          _controller.future.then((_) => widget.onStyleLoadedCallback!());
+          if(widget.onStyleLoadedCallback != null) {
+            _controller.future.then((_) => widget.onStyleLoadedCallback!());
+          }
         }
       },
       onMapClick: widget.onMapClick,
