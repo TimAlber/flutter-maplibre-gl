@@ -556,6 +556,7 @@ class MethodChannelMaplibreGl extends MapLibreGlPlatform {
     required double north,
     required double south,
     required double east,
+    required int padding,
   }) async {
     try {
       await _channel.invokeMethod('map#setCameraBounds', <String, dynamic>{
@@ -563,6 +564,7 @@ class MethodChannelMaplibreGl extends MapLibreGlPlatform {
         'north': north,
         'south': south,
         'east': east,
+        'padding': padding,
       });
     } on PlatformException catch (e) {
       return new Future.error(e);

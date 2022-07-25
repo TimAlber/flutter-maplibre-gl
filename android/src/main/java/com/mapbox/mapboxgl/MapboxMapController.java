@@ -1237,9 +1237,18 @@ final class MapboxMapController
           double north = call.argument("north");
           double south = call.argument("south");
           double east = call.argument("east");
-          LatLngBounds bounds = LatLngBounds.from(north, east, south, west);
-          CameraPosition cameraPos = mapboxMap.getCameraForLatLngBounds(bounds, new int[] {200, 200, 200, 200});
-          mapboxMap.setCameraPosition(cameraPos);
+
+          int padding = call.argument("padding");
+
+          LatLng locationOne = new LatLng(north, east);
+          LatLng locationTwo = new LatLng(south, west);
+          LatLngBounds latLngBounds = new LatLngBounds.Builder()
+                  .include(locationOne) // Northeast
+                  .include(locationTwo) // Southwest
+                  .build();
+          mapboxMap.easeCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,
+                  padding), 200);
+
           break;
         }
       case "style#setFilter":

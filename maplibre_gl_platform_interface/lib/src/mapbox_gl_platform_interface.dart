@@ -108,6 +108,7 @@ abstract class MapLibreGlPlatform {
     required double north,
     required double south,
     required double east,
+    required int padding,
   });
 
   Future<void> setFeatureForGeoJsonSource(

@@ -1165,12 +1165,14 @@ class MaplibreMapController extends ChangeNotifier {
     required double north,
     required double south,
     required double east,
+    required int padding,
   }) async {
     return _mapboxGlPlatform.setCameraBounds(
       west: west,
       north: north,
       south: south,
       east: east,
+      padding: padding,
     );
   }
 
