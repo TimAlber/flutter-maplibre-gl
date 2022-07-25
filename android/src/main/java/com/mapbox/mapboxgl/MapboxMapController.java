@@ -69,6 +69,8 @@ import com.mapbox.mapboxsdk.style.layers.FillLayer;
 import com.mapbox.mapboxsdk.style.layers.HeatmapLayer;
 import com.mapbox.mapboxsdk.style.layers.HillshadeLayer;
 import com.mapbox.mapboxsdk.style.layers.Layer;
+import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.RasterLayer;
@@ -280,14 +282,9 @@ final class MapboxMapController
     if (sketch == null || sketch.isEmpty()) {
       Log.e(TAG, "setGeoJson - string empty or null");
     } else {
-      FeatureCollection features = FeatureCollection.fromJson(sketch);
       Style style = mapboxMap.getStyle();
       GeoJsonSource source = style.getSourceAs("composite");
       source.setGeoJson(sketch);
-      BoundingBox bbox = features.bbox();
-      LatLngBounds bounds = LatLngBounds.from(bbox.north(), bbox.east(), bbox.south(), bbox.west());
-      CameraPosition cameraPos = mapboxMap.getCameraForLatLngBounds(bounds);
-      mapboxMap.setCameraPosition(cameraPos);
     }
   }
 
@@ -1210,6 +1207,39 @@ final class MapboxMapController
           interactiveFeatureLayerIds.remove(layerId);
 
           result.success(null);
+          break;
+        }
+      case "style#layerVisibility":
+        {
+          if (style == null) {
+            result.error("STYLE IS NULL", "The style is null. Has onStyleLoaded() already been invoked?", null);
+          }
+          boolean visibility = call.argument("visibility");
+          List<String> affectedLayers = call.argument("layerIds");
+          List<Layer> layers= style.getLayers();
+          for(Layer layer : layers) {
+            if(!affectedLayers.contains(layer.getId())) continue;
+            layer.setProperties(PropertyFactory.visibility(visibility ? Property.VISIBLE : Property.NONE));
+          }
+          result.success(null);
+          break;
+        }
+      case "map#setGeoJson":
+        {
+          String sketch = call.argument("sketch");
+          setGeoJson(sketch);
+          result.success(null);
+          break;
+        }
+      case "map#setCameraBounds":
+        {
+          double west = call.argument("west");
+          double north = call.argument("north");
+          double south = call.argument("south");
+          double east = call.argument("east");
+          LatLngBounds bounds = LatLngBounds.from(north, east, south, west);
+          CameraPosition cameraPos = mapboxMap.getCameraForLatLngBounds(bounds, new int[] {200, 200, 200, 200});
+          mapboxMap.setCameraPosition(cameraPos);
           break;
         }
       case "style#setFilter":
