@@ -272,7 +272,7 @@ class MethodChannelMaplibreGl extends MapLibreGlPlatform {
   Future<List> queryRenderedFeatures(
       Point<double> point, List<String> layerIds, List<Object>? filter) async {
     try {
-      final Map<dynamic, dynamic> reply = await _channel.invokeMethod(
+      final reply = await _channel.invokeMethod(
         'map#queryRenderedFeatures',
         <String, Object?>{
           'x': point.x,
@@ -291,7 +291,7 @@ class MethodChannelMaplibreGl extends MapLibreGlPlatform {
   Future<List> queryRenderedFeaturesInRect(
       Rect rect, List<String> layerIds, String? filter) async {
     try {
-      final Map<dynamic, dynamic> reply = await _channel.invokeMethod(
+      final reply = await _channel.invokeMethod(
         'map#queryRenderedFeatures',
         <String, Object?>{
           'left': rect.left,
@@ -340,7 +340,7 @@ class MethodChannelMaplibreGl extends MapLibreGlPlatform {
   Future<LatLngBounds> getVisibleRegion() async {
     try {
       final Map<dynamic, dynamic> reply =
-          await _channel.invokeMethod('map#getVisibleRegion', null);
+          await (_channel.invokeMethod('map#getVisibleRegion', null) as Future<Map<Object, Object>>);
       final southwest = reply['sw'] as List<dynamic>;
       final northeast = reply['ne'] as List<dynamic>;
       return LatLngBounds(
@@ -404,8 +404,8 @@ class MethodChannelMaplibreGl extends MapLibreGlPlatform {
           .map((e) => [e.latitude, e.longitude])
           .expand((e) => e)
           .toList());
-      Float64List result = await _channel.invokeMethod(
-          'map#toScreenLocationBatch', {"coordinates": coordinates});
+      Float64List result = await (_channel.invokeMethod(
+          'map#toScreenLocationBatch', {"coordinates": coordinates}) as Future<Float64List>);
 
       var points = <Point>[];
       for (int i = 0; i < result.length; i += 2) {

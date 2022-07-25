@@ -27,6 +27,7 @@ import androidx.lifecycle.LifecycleOwner;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.mapbox.geojson.BoundingBox;
 import com.google.gson.JsonParser;
 // import com.mapbox.android.core.location.LocationEngine;
 // import com.mapbox.android.core.location.LocationEngineCallback;
@@ -212,6 +213,8 @@ final class MapboxMapController
   @Override
   public void onMapReady(MapboxMap mapboxMap) {
     this.mapboxMap = mapboxMap;
+    mapboxMap.getUiSettings().setLogoEnabled(false);
+    mapboxMap.getUiSettings().setAttributionEnabled(false);
     if (mapReadyResult != null) {
       mapReadyResult.success(null);
       mapReadyResult = null;
@@ -272,7 +275,21 @@ final class MapboxMapController
     }
   }
 
-  
+  public void setGeoJson(String sketch) {
+    // Check if json, url, absolute path or asset path:
+    if (sketch == null || sketch.isEmpty()) {
+      Log.e(TAG, "setGeoJson - string empty or null");
+    } else {
+      FeatureCollection features = FeatureCollection.fromJson(sketch);
+      Style style = mapboxMap.getStyle();
+      GeoJsonSource source = style.getSourceAs("composite");
+      source.setGeoJson(sketch);
+      BoundingBox bbox = features.bbox();
+      LatLngBounds bounds = LatLngBounds.from(bbox.north(), bbox.east(), bbox.south(), bbox.west());
+      CameraPosition cameraPos = mapboxMap.getCameraForLatLngBounds(bounds);
+      mapboxMap.setCameraPosition(cameraPos);
+    }
+  }
 
   @SuppressWarnings({"MissingPermission"})
   private void enableLocationComponent(@NonNull Style style) {
