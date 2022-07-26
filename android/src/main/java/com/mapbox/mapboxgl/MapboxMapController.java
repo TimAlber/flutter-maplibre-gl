@@ -810,9 +810,6 @@ final class MapboxMapController
         }
       case "map#queryRenderedFeatures":
         {
-
-          Log.d("MapboxMapController", "running queryRenderedFeatures java function");
-
           Map<String, Object> reply = new HashMap<>();
           List<Feature> features;
 
