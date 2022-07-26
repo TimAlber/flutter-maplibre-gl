@@ -234,6 +234,7 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
             {
                 var width = right - left
                 var height = bottom - top
+                NSLog("!!layerIds: " + layerIds)
                 features = mapView.visibleFeatures(in: CGRect(x: left, y: top, width: width, height: height), styleLayerIdentifiers: layerIds, predicate: filterExpression)
             }
             var featuresJson = [String]()
