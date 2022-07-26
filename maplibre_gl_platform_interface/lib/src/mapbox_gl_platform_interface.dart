@@ -86,7 +86,7 @@ abstract class MapLibreGlPlatform {
 
   Future<void> removeLayer(String imageLayerId);
 
-  //Future<void> setLayerVisibility(List<String> layerIds, bool visibility);
+  Future<void> setLayerVisibility(List<String> layerIds, bool visibility);
 
   Future<void> setFilter(String layerId, dynamic filter);
 
@@ -103,13 +103,15 @@ abstract class MapLibreGlPlatform {
 
   Future<void> setGeoJsonSource(String sourceId, Map<String, dynamic> geojson);
 
-  // Future setCameraBounds({
-  //   required double west,
-  //   required double north,
-  //   required double south,
-  //   required double east,
-  //   required int padding,
-  // });
+  Future<void> setCameraBounds({
+    required double west,
+    required double north,
+    required double south,
+    required double east,
+    required int padding,
+  });
+
+  Future<void> setGeoJson(String sketch);
 
   Future<void> setFeatureForGeoJsonSource(
       String sourceId, Map<String, dynamic> geojsonFeature);

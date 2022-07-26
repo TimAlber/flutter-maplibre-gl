@@ -1118,9 +1118,9 @@ class MaplibreMapController extends ChangeNotifier {
   }
 
   /// Removes a Mapbox style layer
-  // Future<void> setLayerVisibility(List<String> layerIds, bool visibility) {
-  //   return _mapboxGlPlatform.setLayerVisibility(layerIds, visibility);
-  // }
+  Future<void> setLayerVisibility(List<String> layerIds, bool visibility) {
+    return _mapboxGlPlatform.setLayerVisibility(layerIds, visibility);
+  }
 
   Future<void> setFilter(String layerId, dynamic filter) {
     return _mapboxGlPlatform.setFilter(layerId, filter);
@@ -1151,30 +1151,30 @@ class MaplibreMapController extends ChangeNotifier {
     return _mapboxGlPlatform.getMetersPerPixelAtLatitude(latitude);
   }
 
-  // Future setGeoJson(String sketch) async {
-  //   return _mapboxGlPlatform.setGeoJson(sketch);
-  // }
+  Future setGeoJson(String sketch) async {
+    return _mapboxGlPlatform.setGeoJson(sketch);
+  }
 
   /// Add a new source to the map
   Future<void> addSource(String sourceid, SourceProperties properties) async {
     return _mapboxGlPlatform.addSource(sourceid, properties);
   }
 
-  // Future setCameraBounds({
-  //   required double west,
-  //   required double north,
-  //   required double south,
-  //   required double east,
-  //   required int padding,
-  // }) async {
-  //   return _mapboxGlPlatform.setCameraBounds(
-  //     west: west,
-  //     north: north,
-  //     south: south,
-  //     east: east,
-  //     padding: padding,
-  //   );
-  // }
+  Future setCameraBounds({
+    required double west,
+    required double north,
+    required double south,
+    required double east,
+    required int padding,
+  }) async {
+    return _mapboxGlPlatform.setCameraBounds(
+      west: west,
+      north: north,
+      south: south,
+      east: east,
+      padding: padding,
+    );
+  }
 
   /// Add a layer to the map with the given properties
   ///
