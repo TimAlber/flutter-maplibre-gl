@@ -811,7 +811,7 @@ final class MapboxMapController
       case "map#queryRenderedFeatures":
         {
 
-          System.out.println('running queryRenderedFeatures java function');
+          Log.d('running queryRenderedFeatures java function');
 
           Map<String, Object> reply = new HashMap<>();
           List<Feature> features;
